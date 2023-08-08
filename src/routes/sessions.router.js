@@ -1,5 +1,6 @@
 import passport from 'passport';
 import express from 'express';
+import { userDTO } from '../DAO/DTO/user.dto.js';
 export const sessionsRouter = express.Router();
 
 sessionsRouter.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
@@ -13,5 +14,6 @@ sessionsRouter.get('/githubcallback', passport.authenticate('github', { failureR
 });
 
 sessionsRouter.get('/current', (req, res) => {
-  return res.send(JSON.stringify(req.session));
+  const userSession = new userDTO(req.session);
+  return res.json({ user: userSession });
 });

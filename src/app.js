@@ -14,7 +14,7 @@ import { coockieRouter } from './routes/cookies.router.js';
 import { cartsHtml } from './routes/homeCarts.router.js';
 import { productsHtml } from './routes/homeProducts.router.js';
 import { productsRouter } from './routes/products.router.js';
-import { productsRealTime } from './routes/realTimeProducts.router.js';
+import { productsRealTime } from './routes/realtimeproducts.router.js';
 import { sessionsRouter } from './routes/sessions.router.js';
 import { __dirname, connectMongo, connectSocket } from './utils.js';
 

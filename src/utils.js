@@ -40,8 +40,10 @@ export async function connectMongo() {
 
 /******************************* Socket *******************************/
 import { Server } from 'socket.io';
-import ProductManager from './DAO/fileSystem/productManager.js';
 import { ChatModel } from './DAO/models/chat.model.js';
+import { ProductService } from './services/products.service.js';
+import { ProductModel } from './DAO/models/products.model.js';
+const Products = new ProductService();
 
 export function connectSocket(httpServer) {
   const socketServer = new Server(httpServer);
@@ -51,20 +53,52 @@ export function connectSocket(httpServer) {
 
     /*************** Add and Delete Products ***************/
     socket.on('new-product', async (newProduct) => {
-      const data = new ProductManager('./src/data/products.json');
-      await data.addProduct(newProduct);
+      try {
+        const { title, description, price, thumbnail, code, stock, category, status } = newProduct;
+        await Products.createOne(title, description, price, thumbnail, code, stock, category, status);
+        const allProducts = await ProductModel.find({});
+        const products = allProducts.map((product) => {
+          return {
+            title: product.title,
+            id: product._id,
+            description: product.description,
+            price: product.price,
+            code: product.code,
+            stock: product.stock,
+            category: product.category,
+            thumbnail: product.thumbnail,
+          };
+        });
 
-      const products = await data.getProducts();
-      console.log(products);
-      socketServer.emit('products', products);
+        console.log('desde utils');
+        socketServer.emit('products', products);
+      } catch (error) {
+        console.log(error);
+      }
     });
 
-    socket.on('delete-product', async (productId) => {
-      const data = new ProductManager('./src/data/products.json');
-      await data.deleteProduct(productId);
+    socket.on('delete-product', async (idProduct) => {
+      try {
+        await Products.deleteOne(idProduct);
 
-      const products = await data.getProducts();
-      socketServer.emit('products', products);
+        const allProducts = await ProductModel.find({});
+        const products = allProducts.map((product) => {
+          return {
+            title: product.title,
+            id: product._id,
+            description: product.description,
+            price: product.price,
+            code: product.code,
+            stock: product.stock,
+            category: product.category,
+            thumbnail: product.thumbnail,
+          };
+        });
+
+        socketServer.emit('products', products);
+      } catch (error) {
+        console.log(error);
+      }
     });
 
     /******************** Chat Message ********************/

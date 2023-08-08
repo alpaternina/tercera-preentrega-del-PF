@@ -13,3 +13,17 @@ export function isUser(req, res, next) {
   }
   return res.status(401).render('error', { error: 'Error de autenticación' });
 }
+
+export function isNotAdmin(req, res, next) {
+  if (req.session?.role !== 'admin') {
+    return next();
+  }
+  return res.status(403).render('error', { error: 'Error de autorización' });
+}
+
+export const isCartOwner = (req, res, next) => {
+  if (req.session?.cart === req.params.cid) {
+    return next();
+  }
+  return res.status(403).render('error', { error: 'Error de autorización.' });
+};

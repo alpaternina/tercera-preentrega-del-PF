@@ -31,7 +31,7 @@
   <input class='"send' type='submit' value='Ingresar Producto' />
 </form>
 
-<h1>Lista de Productos</h1>
+<h1>Listado de productos</h1>
 <div class='row'>
   <div id='products-list'>
     {{#each products}}
@@ -50,7 +50,7 @@
             <li class='list-group-item'>Category: {{category}}</li>
           </ul>
           <div class='card-body'>
-            <button type='button' class='btn btn-danger' onclick='deleteProduct({{id}})'>Eliminar</button>
+            <button type='button' class='btn btn-danger' onclick="deleteProduct('{{id}}')">Eliminar</button>
           </div>
         </div>
       </div>
